@@ -14,10 +14,11 @@
 #
 # This class file is not called directly
 class nginx::package::redhat (
-  $manage_repo    = true,
-  $package_ensure = 'present',
-  $package_name   = 'nginx',
-  $package_source = 'nginx-stable',
+  $manage_repo      = true,
+  $package_ensure   = 'present',
+  $package_name     = 'nginx',
+  $package_source   = 'nginx-stable',
+  $package_location = undef,
 ) {
 
   #Install the CentOS-specific packages on that OS, otherwise assume it's a RHEL
@@ -59,9 +60,18 @@ class nginx::package::redhat (
     }
   }
 
-  package { 'nginx':
-    ensure => $package_ensure,
-    name   => $package_name,
+  if $package_source == 'rpm' {
+    package { 'nginx':
+      ensure   => $package_ensure,
+      provider => 'rpm',
+      source   => $package_location,
+    }
+  }
+  else {
+    package { 'nginx':
+      ensure => $package_ensure,
+      name   => $package_name,
+    }
   }
 
 }

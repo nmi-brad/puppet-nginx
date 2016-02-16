@@ -14,11 +14,13 @@
 #
 # This class file is not called directly
 class nginx::package(
-  $package_name   = $::nginx::params::package_name,
-  $package_source = 'nginx',
-  $package_ensure = 'present',
-  $package_flavor = undef,
-  $manage_repo    = $::nginx::params::manage_repo,
+  $package_name     = $::nginx::params::package_name,
+  $package_source   = 'nginx',
+  $package_ensure   = 'present',
+  $package_flavor   = undef,
+  $package_location = undef,
+  $manage_repo      = $::nginx::params::manage_repo,
+
 ) inherits ::nginx::params {
 
   anchor { 'nginx::package::begin': }
@@ -27,22 +29,24 @@ class nginx::package(
   case $::osfamily {
     'redhat': {
       class { '::nginx::package::redhat':
-        manage_repo    => $manage_repo,
-        package_source => $package_source,
-        package_ensure => $package_ensure,
-        package_name   => $package_name,
-        require        => Anchor['nginx::package::begin'],
-        before         => Anchor['nginx::package::end'],
+        manage_repo      => $manage_repo,
+        package_source   => $package_source,
+        package_ensure   => $package_ensure,
+        package_name     => $package_name,
+        package_location => $package_location,
+        require          => Anchor['nginx::package::begin'],
+        before           => Anchor['nginx::package::end'],
       }
     }
     'debian': {
       class { '::nginx::package::debian':
-        package_name   => $package_name,
-        package_source => $package_source,
-        package_ensure => $package_ensure,
-        manage_repo    => $manage_repo,
-        require        => Anchor['nginx::package::begin'],
-        before         => Anchor['nginx::package::end'],
+        package_name     => $package_name,
+        package_source   => $package_source,
+        package_ensure   => $package_ensure,
+        package_location => $package_location,
+        manage_repo      => $manage_repo,
+        require          => Anchor['nginx::package::begin'],
+        before           => Anchor['nginx::package::end'],
       }
     }
     'Solaris': {
