@@ -104,6 +104,7 @@ class nginx (
   $package_source                 = 'nginx',
   $package_flavor                 = undef,
   $manage_repo                    = $::nginx::params::manage_repo,
+  $package_location               = undef,
   ### END Package Configuration ###
 
   ### START Service Configuation ###
@@ -209,12 +210,13 @@ class nginx (
   ### END DEPRECATION WARNING ###
 
   class { '::nginx::package':
-    package_name   => $package_name,
-    package_source => $package_source,
-    package_ensure => $package_ensure,
-    package_flavor => $package_flavor,
-    notify         => Class['::nginx::service'],
-    manage_repo    => $manage_repo,
+    package_name     => $package_name,
+    package_source   => $package_source,
+    package_ensure   => $package_ensure,
+    package_flavor   => $package_flavor,
+    package_location => $package_location,
+    notify           => Class['::nginx::service'],
+    manage_repo      => $manage_repo,
   }
 
   ## This `if` statement is here in the event a user cannot use
